@@ -1,0 +1,9 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PMDApex" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="pmdPath" value="$PROJECT_DIR$/../../../../../dev/pmd-bin-6.39.0" />
+      <option name="rulesetPath" value="$PROJECT_DIR$/../../../../../dev/pmd-bin-6.39.0/pmd-apex.xml" />
+    </inspection_tool>
+  </profile>
+</component>

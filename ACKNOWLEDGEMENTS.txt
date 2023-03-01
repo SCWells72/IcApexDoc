@@ -1,0 +1,14 @@
+In accordance with the respective licenses, IcApexDoc recognizes the following
+third-party libraries which it uses directly:
+
+* Apache Commons CLI
+* Apache Commons Collections 4
+* Apache Commons IO
+* Apache Commons Lang 3
+* Apache Commons Text
+* Google GSON
+* Oracle Bean Validation API
+* Jakarta XML Binding API
+* JetBrains intellij-community icons
+* Salesforce Apex Jorje parser
+* SLF4J
