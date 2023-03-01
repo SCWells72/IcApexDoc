@@ -98,6 +98,8 @@ References can be specified as:
 
 You can install IcApexDoc by downloading the latest released `IcApexDoc.zip` archive from the **Releases** sidebar, extracting it into your local filesystem, and adding `<extractedDirectory>/bin` to your operating system's execution path. You should then be able to run `apexdoc` from the command-line successfully.
 
+Note that you **must** also have a **Java 11+ runtime environment** installed with the `java` executable also available in the operating system's execution path such that you are able to run `java` from the command-line successfully.
+
 ## Usage
 
 The command-line usage is as follows:
@@ -179,4 +181,4 @@ You can specify the path to a CSS file that should be used to style the generate
 
 ## License
 
-IcApexDoc is 100% free to use under the [**Apache 2.0 License**](https://www.apache.org/licenses/LICENSE-2.0). Note that while portions of IcApexDoc have been derived from [**Illuminated Cloud 2**](https://www.illuminatedcloud.com/), that product&mdash;and its predecessor [**Illuminated Cloud 1**](https://www.illuminatedcloud.com/purchase/illuminated-cloud-1)&mdash;are **commercial products** offered under their own legal [**Terms and Conditions**](https://www.illuminatedcloud.com/purchase/terms-and-conditions). Access to or usage of IcApexDoc does not **in any way** entitle the user to a license for either Illuminated Cloud 2 Illuminated Cloud 1.
+IcApexDoc is 100% free to use under the [**Apache 2.0 License**](https://www.apache.org/licenses/LICENSE-2.0). Note that while portions of IcApexDoc have been derived from [**Illuminated Cloud 2**](https://www.illuminatedcloud.com/), that product&mdash;and its predecessor [**Illuminated Cloud 1**](https://www.illuminatedcloud.com/purchase/illuminated-cloud-1)&mdash;are **commercial products** offered under their own legal [**Terms and Conditions**](https://www.illuminatedcloud.com/purchase/terms-and-conditions). Access to or usage of IcApexDoc does not **in any way** entitle the user to a license for either Illuminated Cloud 2 or Illuminated Cloud 1.
