@@ -35,7 +35,7 @@ Clicking on a type, trigger, or SObject link navigates to the specific page for 
 
 ![TopLevelDeclaration](images/TopLevelDeclaration.png)
 
-Documentation for each generated declaration is based on its unique signature, i.e., annotations, modifiers, type, name, parameters, and bidirectional inheritance relationships, as well as the user-defined documentation. For Apex declarations, the user-defined documentation is based on an [ApexDoc documentation comment](#syntax) immediately preceding the declaration itself; for SObjects and their fields, the user-defined documentation is based on the `description` and `label` field values found in the corresponding metadata XML files.
+Documentation for each generated declaration is based on its unique signature, i.e., annotations, modifiers, type, name, parameters, and bidirectional inheritance relationships, as well as the user-defined documentation. For Apex declarations, the user-defined documentation is based on an [ApexDoc documentation comment](#syntax) immediately preceding the declaration itself; for SObjects and their fields, the user-defined documentation is based on the `description` and `label` elements found in the corresponding metadata XML files.
 
 ## Syntax
 
@@ -73,8 +73,8 @@ The following ApexDoc tags are supported:
 * `@exception`/`@throws <exceptionTypeName> [<description>]` - Documents an exception that is thrown by the method or constructor with an optional description of the conditions under which it's thrown. **NOTE:** IcApexDoc accepts both `@exception` and `@throws` for the list of thrown exceptions.
 * `@group <groupName>` - Provides a name that can be used to group common declarations together. **NOTE:** As a **future enhancement**, IcApexDoc may add a **Groups** tab to the page navigation bar where all used groups are displayed and, upon selection, all declarations for that group are listed.
 * `@group-content <filePath>` - Provides the path to a file that should be used when displaying all declarations for the `@group` value. **NOTE:** IcApexDoc currently consumes this as a valid tag but does not include it in the generated output. The same enhancement described above for `@group` would use this to create the group page content.
-* `@param <paramName> [<paramDescription>]` - Documents the respective formal parameter of the documented constructor or method. `@param` tags should be listed in the same order as the respective formal parameters.
-* `@return`/`@returns <description>` - Documents the value(s) returned by the documented method. **NOTE:** The preferred form is `@return` but both are supported by IcApexDoc.
+* `@param <paramName> [<paramDescription>]` - Describes the respective formal parameter of the documented constructor or method. `@param` tags should be listed in the same order as the respective formal parameters.
+* `@return`/`@returns <description>` - Describes the value(s) returned by the documented method. **NOTE:** The preferred form is `@return` but both are supported by IcApexDoc.
 * `@see <typeName>[.<memberName>] [<description>]` - Adds a reference to a related type or member with an optional description of the relationship.
 * `@since <value>` - Specifies a version, date, etc., from which the documented declaration should be considered available.
 
