@@ -105,7 +105,7 @@ Note that you **must** also have a **Java 11+ runtime environment** installed wi
 The command-line usage is as follows:
 
 ```text
-usage: apexdoc
+usage: apexdoc <options>
  -p,--sfdx-project <arg>   sfdx-project.json file
  -s,--source <arg>         input source directory
  -x,--exclude <arg>        exclude directory
