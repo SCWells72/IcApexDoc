@@ -106,17 +106,18 @@ The command-line usage is as follows:
 
 ```text
 usage: apexdoc
- -p,--sfdx-project <arg>         sfdx-project.json file
- -s,--source <arg>               input source directory
- -x,--exclude <arg>              exclude directory
- -o,--output <arg>               output directory
- -v,--minimum <arg>              minimum visibility for included
-                                 declarations; one of private, protected,
-                                 public, or global (default protected)
- -t,--title <arg>                window title
- -f,--overview <arg>             overview HTML file
- -c,--css <arg>                  custom stylesheet file
- -h,--help                       show usage details
+ -p,--sfdx-project <arg>   sfdx-project.json file
+ -s,--source <arg>         input source directory
+ -x,--exclude <arg>        exclude directory
+ -o,--output <arg>         output directory
+ -v,--visibility <arg>     minimum visibility for included declarations;
+                           one of private, protected, public, or global
+                           (default protected)
+ -t,--title <arg>          window title
+ -f,--overview <arg>       overview HTML file
+ -c,--css <arg>            custom stylesheet file
+ -h,--help                 show usage details
+ -version,--version        show version information
 ```
 
 ## Input
