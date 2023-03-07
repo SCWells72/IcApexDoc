@@ -8,6 +8,7 @@ An API documentation generator for Salesforce Apex types and triggers and custom
 * [Installation](#installation)
 * [Usage](#usage)
 * [License](#license)
+* [Release Notes](RELEASE-NOTES.md)
 
 ## Overview
 
@@ -84,6 +85,7 @@ The following ApexDoc macros are supported:
 
 * `{@link <reference>}` - Creates a link to the specified type or member.
 * `<<reference>>` - Creates a link to the specified type or member. **NOTE:** This macro is specifically `<<...>>`; the angle brackets do not frame a variable.
+* `{@code <code>}` - Formats the text as code.
 * <code>\`&lt;code&gt;\`</code> - Formats the text between backticks as code.
 
 References can be specified as:

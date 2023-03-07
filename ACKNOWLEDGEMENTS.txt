@@ -1,11 +1,13 @@
 In accordance with the respective licenses, IcApexDoc recognizes the following
-third-party libraries which it uses directly:
+third-party libraries which are used directly and their respective transitive
+dependencies:
 
 * Apache Commons CLI
 * Apache Commons Collections 4
 * Apache Commons IO
 * Apache Commons Lang 3
 * Apache Commons Text
+* ClassGraph
 * Google GSON
 * Oracle Bean Validation API
 * Jakarta XML Binding API
