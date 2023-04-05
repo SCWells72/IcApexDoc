@@ -4,6 +4,7 @@ dependencies:
 
 * Apache Commons CLI
 * Apache Commons Collections 4
+* Apache Commons Exec
 * Apache Commons IO
 * Apache Commons Lang 3
 * Apache Commons Text

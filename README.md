@@ -107,20 +107,28 @@ Note that you **must** also have a **Java 11+ runtime environment** installed wi
 The command-line usage is as follows:
 
 ```text
-usage: apexdoc <options>
+usage: apexdoc <options> | @<optionsFile>
  -p,--sfdx-project <arg>   sfdx-project.json file
  -s,--source <arg>         input source directory
+ -u,--username <arg>       Salesforce CLI username or alias
+ -i,--include-org-types    whether org-only types should be included in
+                           generated ApexDoc when the '-u/--username'
+                           option is specified
  -x,--exclude <arg>        exclude directory
  -o,--output <arg>         output directory
  -v,--visibility <arg>     minimum visibility for included declarations;
                            one of private, protected, public, or global
                            (default protected)
+ -n,--namespace <arg>      namespace
+ -nn,--no-namespace        don't use the namespace from sfdx-project.json
  -t,--title <arg>          window title
  -f,--overview <arg>       overview HTML file
  -c,--css <arg>            custom stylesheet file
  -h,--help                 show usage details
  -version,--version        show version information
 ```
+
+As indicated, command-line options can be specified explicitly or as the contents of an [options file](#options-file).
 
 ## Input
 
@@ -138,6 +146,20 @@ In a metadata format (i.e., pre-Salesforce DX) project, source directories must 
 
 ```text
 apexdoc -s src -s test -o apexdoc
+```
+
+### Org-only Apex types
+
+Local Apex types may extend, implement, or reference types that are available only in the organization via installed packages. In order for these relationships to be represented properly in the generated ApexDoc, those sources must be available to the tool. The associated org must be available to the Salesforce CLI via username or alias which can be specified to IcApexDoc using the `-u/--username` argument, and the Salesforce CLI must be available via the system execution path.
+
+```text
+apexdoc -p sfdx-project.json -o apexdoc -u orgAlias
+```
+
+By default when the `-u/--username` argument is provided, org-only types are **not** included in the generated ApexDoc, but relationships and references to those types are correctly included when found in local source files. If desired, org-only types can be included in the generated ApexDoc using the `-i/--include-org-types` argument.
+
+```text
+apexdoc -p sfdx-project.json -o apexdoc -u orgAlias -i
 ```
 
 ### Exclusion
@@ -164,6 +186,13 @@ You can specify the minimum visibility of declarations to be included in the gen
 apexdoc -p sfdx-project.json -o apexdoc -v global
 ```
 
+### Namespace
+
+You can control whether a namespace is used for documented declarations using the `-n/--namespace` and `-nn/no-namespace` arguments:
+* If neither argument is provided and an `sfdx-project.json` file containing a `namespace` property is specified, that value is used.
+* If the `sfdx-project.json` file contains a `namespace` property and the namespace should _not_ be used, the `-nn/-no-namespace` argument can be used to disable namespace processing.
+* If no `sfdx-project.json` file is specified, or if a different namespace than the one in that file should be used, the `-n/--namespace` argument can be used to specify a namespace value explicitly.
+
 ### Project title
 
 You can specify the title of the project explicitly using the `-t/--title` argument. If unspecified and an `sfdx-project.json` file containing a `name` property is specified, that value is used as the project title. Otherwise the default value of `ApexDoc` is used.
@@ -181,6 +210,27 @@ The HTML content should **not** include the `<html>`, `<head>`, or  `<body>` tag
 ### Stylesheet
 
 You can specify the path to a CSS file that should be used to style the generated documentation using the `-c/-css` argument. The `default.css` file that is included if this argument is unspecified should be used for reference when creating a custom stylesheet.
+
+## Options file
+
+If an options file is used, it should include one command-line argument per-line and can include blank lines and comments via lines starting with `#`, e.g.,
+
+```shell
+apexdoc @apexdoc.opts
+```
+
+where `apexdoc.opts` contains:
+
+```text
+-p
+sfdx-project.json
+
+-o
+apexdoc
+
+# Don't use the namespace in sfdx-project.json
+-nn
+```
 
 ## License
 

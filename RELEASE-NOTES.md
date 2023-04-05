@@ -1,6 +1,15 @@
 # Release Notes
 
+* [1.0.0.2](#1002)
 * [1.0.0.1](#1001)
+
+## [1.0.0.2](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.2)
+
+* [Issue 4](https://github.com/SCWells72/IcApexDoc/issues/4) - IcApexDoc can now read its command-line options from a file by invoking it as `apexdoc @<file>`. Command-line options should be specified exactly one per-line, and blank lines and comments (designated by `#` in the first column) are allowed in the file.
+* [Issue 5](https://github.com/SCWells72/IcApexDoc/issues/5) - Added support for generating documentation against a namespace. The namespace is either derived from the specified `sfdx-project.json` file's `namespace` value or explicitly via the `-n/--namespace <namespace>` argument. If `sfdx-project.json` contains a `namespace` value that should _not_ be used, the `-nn/--no-namespace` argument can be specified. The appropriate namespace prefix is included in the generated documentation for and links to all top-level types and triggers, and all custom SObject types and fields. 
+* [Issue 7](https://github.com/SCWells72/IcApexDoc/issues/7) - The ApexDoc comment no longer needs to be on the line immediately before the corresponding declaration. The documentation comment that precedes the declaration with only intermediate whitespace is now used.
+* [Issue 8](https://github.com/SCWells72/IcApexDoc/issues/8) - Added support for resolution of references from local Apex types to types that are available only in the organization via installed packages. The associated org must be available to the Salesforce CLI via username or alias which can be specified to IcApexDoc using the `-u/--username` argument, and the Salesforce CLI must be available via the system execution path. Org-only types are **not** included in generated ApexDoc by default but can be included if desired using the `-i/--include-org-types` argument.
+* The anchored member is now designated visually with a subtle bounding box. This can be customized via CSS using the `.members :target` selector.
 
 ## [1.0.0.1](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.1)
 
