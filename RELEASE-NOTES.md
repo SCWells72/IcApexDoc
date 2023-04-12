@@ -1,7 +1,12 @@
 # Release Notes
 
+* [1.0.0.3](#1003)
 * [1.0.0.2](#1002)
 * [1.0.0.1](#1001)
+
+## [1.0.0.3](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.3)
+
+* [Issue 3](https://github.com/SCWells72/IcApexDoc/issues/3) - IcApexDoc now performs [full semantic validation](README.md#validation) of ApexDoc, reporting issues, omissions, etc., about ApexDoc comments and their respective Apex declarations. Validation rules are fully configurable via a [JSON options file](README.md#validator-options-file).
 
 ## [1.0.0.2](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.2)
 

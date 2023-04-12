@@ -1,0 +1,190 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/SCWells72/IcApexDoc/main/validator/apexdoc_validator.schema.json",
+  "title": "IcApexDoc validator options",
+  "description": "Options specification file for the IcApexDoc validator. All properties are optional. Only those that should be changed from the respective default value need be specified explicitly in an options file.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "validateMissingDocComment": {
+      "type": "boolean",
+      "default": false,
+      "description": "If enabled, report declarations that meet or exceed the minimum visibility for ApexDoc generation that do not have a documentation comment. Disabled by default."
+    },
+    "validateMissingDocCommentMinimumVisibility": {
+      "type": "string",
+      "default": "PROTECTED",
+      "description": "The minimum visibility for which validateMissingDocComment should apply. The default is PROTECTED.",
+      "enum": [
+        "PRIVATE",
+        "PROTECTED",
+        "PUBLIC",
+        "GLOBAL"
+      ]
+    },
+    "validateMissingDocCommentIgnoreDeprecated": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled and validateMissingDocComment is also enabled, @Deprecated declarations that would otherwise be flagged by validateMissingDocComment are ignored. Enabled by default."
+    },
+    "validateMissingDocCommentIgnoreInherited": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled and validateMissingDocComment is also enabled, declarations that would otherwise be flagged by validateMissingDocComment but which inherit a documentation comment from a base declaration are ignored. Enabled by default."
+    },
+    "validateMissingDocCommentIgnoreExtendsSystemType": {
+      "type": "boolean",
+      "default": false,
+      "description": "If enabled and validateMissingDocComment is also enabled, declarations that would otherwise be flagged by validateMissingDocComment but which extend a standard/system Apex type are ignored. Disabled by default."
+    },
+    "validateMissingDocCommentIgnoreOverridesSystemMethod": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled and validateMissingDocComment is also enabled, declarations that would otherwise be flagged by validateMissingDocComment but which implement/override a method from a standard/system Apex type are ignored. Enabled by default."
+    },
+    "validateUnresolvableAtLink": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, unresolvable declaration references in {@link ...} macros are flagged. Enabled by default."
+    },
+    "validateUnresolvableTypeReference": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, unresolvable declaration references in <<...>> macros are flagged. Enabled by default."
+    },
+    "validateMissingDescriptionTag": {
+      "type": "boolean",
+      "default": false,
+      "description": "If enabled, description text that is not explicitly designated with the @description tag are flagged. Disabled by default."
+    },
+    "validateMissingParamTag": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, formal parameters which do not have a corresponding @param tag in the parent method or constructor's documentation comment are flagged. Enabled by default."
+    },
+    "validateMissingParamTagName": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @param tags which do not specify a formal parameter name are flagged. Enabled by default."
+    },
+    "validateMissingParamTagDescription": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @param tags which do not provide a description are flagged. Enabled by default."
+    },
+    "validateIncorrectlyOrderedParamTag": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @param tags which are not listed in the exact same order as their respective formal parameters are flagged. Enabled by default."
+    },
+    "validateUnresolvableParamTag": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @param tags which specify a formal parameter name that does not correspond to an actual formal parameter of the documented method or constructor are flagged. Enabled by default."
+    },
+    "validateMisattributedParamTag": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @param tags used in the documentation comment for any declaration type that does not accept formal parameters are flagged. Enabled by default."
+    },
+    "validateMissingReturnTag": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, documentation comments for methods that specify a non-void return type but do not include an @return/s tag are flagged. Enabled by default."
+    },
+    "validateExtraneousReturnTag": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, documentation comments for methods that specify a void return type but include an @return/s tag are flagged. Enabled by default."
+    },
+    "validateMissingReturnTagDescription": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @return/s tags which do not provide a description are flagged. Enabled by default."
+    },
+    "validateMisattributedReturnTag": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @return/s tags used in the documentation comment for any declaration type that does have an explicit return type (including constructors) are flagged. Enabled by default."
+    },
+    "validateReturnsTagUsage": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, usages of the non-standard @returns tag are flagged. It is recommended that the standard @return tag be used instead. Enabled by default."
+    },
+    "validateMissingExceptionTagTypeName": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @throws/@exception tags which do not specify an exception type name are flagged. Enabled by default."
+    },
+    "validateUnresolvableExceptionTagTypeName": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @throws/@exception tags which specify an exception type name that cannot be resolved are flagged. Enabled by default."
+    },
+    "validateMissingExceptionTagDescription": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @throws/@exception tags which do not provide a description for the thrown exception are flagged. Enabled by default."
+    },
+    "validateMisattributedExceptionTag": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @throws/@exception tags used in the documentation comment for any declaration type that cannot throw an exception are flagged. Enabled by default."
+    },
+    "preferredExceptionTag": {
+      "type": "string",
+      "default": "THROWS",
+      "description": "The preferred tag for documenting thrown exceptions, either THROWS or EXCEPTION. The non-preferred tag is flagged when found. The default is THROWS.",
+      "enum": [
+        "EXCEPTION",
+        "THROWS"
+      ]
+    },
+    "validateMissingSeeTagTypeMemberName": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @see tags which do not specify a target are flagged. Enabled by default."
+    },
+    "validateUnresolvableSeeTagTypeMemberName": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @see tags which specify an unresolvable target are flagged. Enabled by default."
+    },
+    "validateMissingSeeTagDescription": {
+      "type": "boolean",
+      "default": false,
+      "description": "If enabled, @see tags which do not provide a description for the referenced target are flagged. Disabled by default."
+    },
+    "validateAuthorTagValue": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @author tags which do not specify a value are flagged. Enabled by default."
+    },
+    "validateGroupTagValue": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @group tags which do not specify a group name are flagged. Enabled by default."
+    },
+    "validateDateTagValue": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @date tags which do not specify a value are flagged. Enabled by default."
+    },
+    "validateSinceTagValue": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @since tags which do not specify a value are flagged. Enabled by default."
+    },
+    "validateExampleTagValue": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @example tags which do not specify a value are flagged. Enabled by default."
+    },
+    "validateDeprecatedTagDescription": {
+      "type": "boolean",
+      "default": false,
+      "description": "If enabled, @deprecated tags which do not provide a description are flagged. Disabled by default."
+    }
+  }
+}

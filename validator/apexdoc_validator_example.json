@@ -1,0 +1,47 @@
+{
+  "validateMissingDocComment": false,
+  "validateMissingDocCommentMinimumVisibility": "PROTECTED",
+  "validateMissingDocCommentIgnoreDeprecated": true,
+  "validateMissingDocCommentIgnoreInherited": true,
+  "validateMissingDocCommentIgnoreExtendsSystemType": false,
+  "validateMissingDocCommentIgnoreOverridesSystemMethod": true,
+
+  "validateUnresolvableAtLink": true,
+  "validateUnresolvableTypeReference": true,
+
+  "validateMissingDescriptionTag": false,
+
+  "validateMissingParamTag": true,
+  "validateMissingParamTagName": true,
+  "validateMissingParamTagDescription": true,
+  "validateIncorrectlyOrderedParamTag": true,
+  "validateUnresolvableParamTag": true,
+  "validateMisattributedParamTag": true,
+
+  "validateMissingReturnTag": true,
+  "validateExtraneousReturnTag": true,
+  "validateMissingReturnTagDescription": true,
+  "validateMisattributedReturnTag": true,
+  "validateReturnsTagUsage": true,
+
+  "validateMissingExceptionTagTypeName": true,
+  "validateUnresolvableExceptionTagTypeName": true,
+  "validateMissingExceptionTagDescription": true,
+  "validateMisattributedExceptionTag": true,
+  "preferredExceptionTag": "THROWS",
+
+  "validateMissingSeeTagTypeMemberName": true,
+  "validateUnresolvableSeeTagTypeMemberName": true,
+  "validateMissingSeeTagDescription": false,
+
+  "validateAuthorTagValue": true,
+
+  "validateGroupTagValue": true,
+
+  "validateDateTagValue": true,
+  "validateSinceTagValue": true,
+
+  "validateExampleTagValue": true,
+
+  "validateDeprecatedTagDescription": false
+}

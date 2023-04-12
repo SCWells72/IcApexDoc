@@ -7,6 +7,7 @@ An API documentation generator for Salesforce Apex types and triggers and custom
 * [Syntax](#syntax)
 * [Installation](#installation)
 * [Usage](#usage)
+* [Validation](#validation)
 * [License](#license)
 * [Release Notes](RELEASE-NOTES.md)
 
@@ -215,7 +216,7 @@ You can specify the path to a CSS file that should be used to style the generate
 
 If an options file is used, it should include one command-line argument per-line and can include blank lines and comments via lines starting with `#`, e.g.,
 
-```shell
+```text
 apexdoc @apexdoc.opts
 ```
 
@@ -231,6 +232,92 @@ apexdoc
 # Don't use the namespace in sfdx-project.json
 -nn
 ```
+
+## Validation
+
+IcApexDoc includes a highly-configurable semantic validator for ApexDoc comments and their application (or lack thereof) to the respective Apex declarations. The validator is run automatically with either the default options or those from a [validator options JSON file](#validator-options-file) specified using the `-vo/--validator-options` argument:
+
+```text
+apexdoc -p sfdx-project.json -o apexdoc -vo apexdoc_validator.json
+```
+
+where an example `apexdoc_validator.json` might contain:
+
+```json
+{
+  "validateMissingDocComment": true,
+  "validateMissingDocCommentMinimumVisibility": "GLOBAL",
+
+  "validateMissingDescriptionTag": true,
+
+  "preferredExceptionTag": "EXCEPTION",
+
+  "validateDeprecatedTagDescription": true
+}
+```
+
+### Validation results
+
+Validation results are included in the output of the `apexdoc` CLI alongside the respective file. Each reported issue includes the severity (currently `Warning` for all validation rules), file path, line number, and detailed error message, e.g.:
+
+```text
+Generating HTML files...
+  apexdoc/ApexDocExample_cls.html
+    Warning: force-app/main/default/classes/ApexDocExample.cls:40 - @param description missing for parameter 'baz' of method 'bar(String)'
+    Warning: force-app/main/default/classes/ApexDocExample.cls:50 - Cannot resolve symbol '#barX' for method 'fooBarBaz()'
+  apexdoc/ApexDocValidationTest_cls.html
+    Warning: force-app/main/default/classes/ApexDocValidationTest.cls:9 - @param description missing for parameter 'age' of constructor 'ApexDocValidationTest(String,Integer)'
+    Warning: force-app/main/default/classes/ApexDocValidationTest.cls:9 - Incorrect @param order for parameter 'age' of constructor 'ApexDocValidationTest(String,Integer)'; expected 2, actual 1
+    Warning: force-app/main/default/classes/ApexDocValidationTest.cls:33 - @return missing for non-void method 'getName()'
+  apexdoc/ShoppingListControllerTestUtil_cls.html
+    Warning: force-app/main/default/classes/ShoppingListControllerTestUtil.cls:14 - @return description missing for method 'createNewObject()'
+    Warning: force-app/main/default/classes/ShoppingListControllerTestUtil.cls:27 - @return description missing for method 'createExistingObject()'
+```
+
+### Validator options file
+
+The following properties can be configured in the validator options JSON file:
+
+| Property                                               | Description                                                                                                                                                                                                                                     |
+|--------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `validateMissingDocComment`                            | If enabled, report declarations that meet or exceed the minimum visibility for ApexDoc generation that do not have a documentation comment. Disabled by default.                                                                                |
+| `validateMissingDocCommentMinimumVisibility`           | The minimum visibility for which `validateMissingDocComment` should apply as one of `PRIVATE`, `PROTECTED`, `PUBLIC`, or `GLOBAL`. The default is `PROTECTED`.                                                                                  |
+| `validateMissingDocCommentIgnoreDeprecated`            | If enabled and `validateMissingDocComment` is also enabled, `@Deprecated` declarations that would otherwise be flagged by `validateMissingDocComment` are ignored. Enabled by default.                                                          |
+| `validateMissingDocCommentIgnoreInherited`             | If enabled and `validateMissingDocComment` is also enabled, declarations that would otherwise be flagged by `validateMissingDocComment` but which inherit a documentation comment from a base declaration are ignored. Enabled by default.      |
+| `validateMissingDocCommentIgnoreExtendsSystemType`     | If enabled and `validateMissingDocComment` is also enabled, declarations that would otherwise be flagged by `validateMissingDocComment` but which extend a standard/system Apex type are ignored. Disabled by default.                          |
+| `validateMissingDocCommentIgnoreOverridesSystemMethod` | If enabled and `validateMissingDocComment` is also enabled, declarations that would otherwise be flagged by `validateMissingDocComment` but which implement/override a method from a standard/system Apex type are ignored. Enabled by default. |
+| `validateUnresolvableAtLink`                           | If enabled, unresolvable declaration references in `{@link ...}` macros are flagged. Enabled by default.                                                                                                                                        |
+| `validateUnresolvableTypeReference`                    | If enabled, unresolvable declaration references in `<<...>>` macros are flagged. Enabled by default.                                                                                                                                            |
+| `validateMissingDescriptionTag`                        | If enabled, description text that is not explicitly designated with the `@description` tag are flagged. Disabled by default.                                                                                                                    |
+| `validateMissingParamTag`                              | If enabled, formal parameters which do not have a corresponding `@param` tag in the parent method or constructor's documentation comment are flagged. Enabled by default.                                                                       |
+| `validateMissingParamTagName`                          | If enabled, `@param` tags which do not specify a formal parameter name are flagged. Enabled by default.                                                                                                                                         |
+| `validateMissingParamTagDescription`                   | If enabled, `@param` tags which do not provide a description are flagged. Enabled by default.                                                                                                                                                   |
+| `validateIncorrectlyOrderedParamTag`                   | If enabled, `@param` tags which are not listed in the exact same order as their respective formal parameters are flagged. Enabled by default.                                                                                                   |
+| `validateUnresolvableParamTag`                         | If enabled, `@param` tags which specify a formal parameter name that does not correspond to an actual formal parameter of the documented method or constructor are flagged. Enabled by default.                                                 |
+| `validateMisattributedParamTag`                        | If enabled, `@param` tags used in the documentation comment for any declaration type that does not accept formal parameters are flagged. Enabled by default.                                                                                    |
+| `validateMissingReturnTag`                             | If enabled, documentation comments for methods that specify a non-void return type but do not include an `@return/s` tag are flagged. Enabled by default.                                                                                       |
+| `validateExtraneousReturnTag`                          | If enabled, documentation comments for methods that specify a void return type but include an `@return/s` tag are flagged. Enabled by default.                                                                                                  |
+| `validateMissingReturnTagDescription`                  | If enabled, `@return/s` tags which do not provide a description are flagged. Enabled by default.                                                                                                                                                |
+| `validateMisattributedReturnTag`                       | If enabled, `@return/s` tags used in the documentation comment for any declaration type that does have an explicit return type (including constructors) are flagged. Enabled by default.                                                        |
+| `validateReturnsTagUsage`                              | If enabled, usages of the non-standard `@returns` tag are flagged. It is recommended that the standard `@return` tag be used instead. Enabled by default.                                                                                       |
+| `validateMissingExceptionTagTypeName`                  | If enabled, `@throws/@exception` tags which do not specify an exception type name are flagged. Enabled by default.                                                                                                                              |
+| `validateUnresolvableExceptionTagTypeName`             | If enabled, `@throws/@exception` tags which specify an exception type name that cannot be resolved are flagged. Enabled by default.                                                                                                             |
+| `validateMissingExceptionTagDescription`               | If enabled, `@throws/@exception` tags which do not provide a description for the thrown exception are flagged. Enabled by default.                                                                                                              |
+| `validateMisattributedExceptionTag`                    | If enabled, `@throws/@exception` tags used in the documentation comment for any declaration type that cannot throw an exception are flagged. Enabled by default.                                                                                |
+| `preferredExceptionTag`                                | The preferred tag for documenting thrown exceptions, either `THROWS` or `EXCEPTION`. The non-preferred tag is flagged when found. The default is `THROWS`.                                                                                      |
+| `validateMissingSeeTagTypeMemberName`                  | If enabled, `@see` tags which do not specify a target are flagged. Enabled by default.                                                                                                                                                          |
+| `validateUnresolvableSeeTagTypeMemberName`             | If enabled, `@see` tags which specify an unresolvable target are flagged. Enabled by default.                                                                                                                                                   |
+| `validateMissingSeeTagDescription`                     | If enabled, `@see` tags which do not provide a description for the referenced target are flagged. Disabled by default.                                                                                                                          |
+| `validateAuthorTagValue`                               | If enabled, `@author` tags which do not specify a value are flagged. Enabled by default.                                                                                                                                                        |
+| `validateGroupTagValue`                                | If enabled, `@group` tags which do not specify a group name are flagged. Enabled by default.                                                                                                                                                    |
+| `validateDateTagValue`                                 | If enabled, `@date` tags which do not specify a value are flagged. Enabled by default.                                                                                                                                                          |
+| `validateSinceTagValue`                                | If enabled, `@since` tags which do not specify a value are flagged. Enabled by default.                                                                                                                                                         |
+| `validateExampleTagValue`                              | If enabled, `@example` tags which do not specify a value are flagged. Enabled by default.                                                                                                                                                       |
+| `validateDeprecatedTagDescription`                     | If enabled, `@deprecated` tags which do not provide a description are flagged. Disabled by default.                                                                                                                                             |
+
+Note that it is only necessary to include options _for which values are different from their defaults_ in an options file. The default values for all unspecified options will be used automatically.
+
+A [JSON schema](validator/apexdoc_validator.schema.json) is available and can be registered with most IDEs to provide code completion and validation for these options files. A comprehensive [example configuration file](validator/apexdoc_validator_example.json), is also available for reference, but as stated previously, _only customized properties_ need to be included in the options file.
 
 ## License
 
