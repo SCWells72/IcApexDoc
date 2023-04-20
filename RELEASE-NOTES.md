@@ -1,8 +1,13 @@
 # Release Notes
 
+* [1.0.0.4](#1004)
 * [1.0.0.3](#1003)
 * [1.0.0.2](#1002)
 * [1.0.0.1](#1001)
+
+## [1.0.0.4](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.4)
+
+* [Issue 9](https://github.com/SCWells72/IcApexDoc/issues/9) - IcApexDoc now uses [Apache Velocity](https://velocity.apache.org/) templates to generate all HTML output files, and it is possible to provide custom templates via the `-ct/--custom-templates` argument. For more information, see [Custom Velocity templates](README.md#custom-velocity-templates).
 
 ## [1.0.0.3](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.3)
 

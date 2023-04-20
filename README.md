@@ -109,24 +109,25 @@ The command-line usage is as follows:
 
 ```text
 usage: apexdoc <options> | @<optionsFile>
- -p,--sfdx-project <arg>   sfdx-project.json file
- -s,--source <arg>         input source directory
- -u,--username <arg>       Salesforce CLI username or alias
- -i,--include-org-types    whether org-only types should be included in
-                           generated ApexDoc when the '-u/--username'
-                           option is specified
- -x,--exclude <arg>        exclude directory
- -o,--output <arg>         output directory
- -v,--visibility <arg>     minimum visibility for included declarations;
-                           one of private, protected, public, or global
-                           (default protected)
- -n,--namespace <arg>      namespace
- -nn,--no-namespace        don't use the namespace from sfdx-project.json
- -t,--title <arg>          window title
- -f,--overview <arg>       overview HTML file
- -c,--css <arg>            custom stylesheet file
- -h,--help                 show usage details
- -version,--version        show version information
+ -p,--sfdx-project <arg>         sfdx-project.json file
+ -s,--source <arg>               input source directory
+ -u,--username <arg>             Salesforce CLI username or alias
+ -i,--include-org-types          whether org-only types should be included in
+                                 generated ApexDoc when the '-u/--username'
+                                 option is specified
+ -x,--exclude <arg>              exclude directory
+ -o,--output <arg>               output directory
+ -v,--visibility <arg>           minimum visibility for included declarations;
+                                 one of private, protected, public, or global
+                                 (default protected)
+ -n,--namespace <arg>            namespace
+ -nn,--no-namespace              don't use the namespace from sfdx-project.json
+ -ct,--custom-templates <arg>    custom Velocity templates directory
+ -t,--title <arg>                window title
+ -f,--overview <arg>             overview HTML file
+ -c,--css <arg>                  custom stylesheet file
+ -h,--help                       show usage details
+ -version,--version              show version information
 ```
 
 As indicated, command-line options can be specified explicitly or as the contents of an [options file](#options-file).
@@ -193,6 +194,23 @@ You can control whether a namespace is used for documented declarations using th
 * If neither argument is provided and an `sfdx-project.json` file containing a `namespace` property is specified, that value is used.
 * If the `sfdx-project.json` file contains a `namespace` property and the namespace should _not_ be used, the `-nn/-no-namespace` argument can be used to disable namespace processing.
 * If no `sfdx-project.json` file is specified, or if a different namespace than the one in that file should be used, the `-n/--namespace` argument can be used to specify a namespace value explicitly.
+
+### Custom Velocity templates
+
+IcApexDoc generates HTML output files using the following [Apache Velocity](https://velocity.apache.org/) templates:
+
+* `headInclude.vm` - Included by all default page templates to provide the `<head>...</head>` portion of the resulting HTML files. This specifies the page title and includes the correct CSS file.
+* `bodyHeaderInclude.vm` - Included by all default page templates to provide the header and top navigation sections of the resulting HTML files.
+* `indexPage.vm` - Used to generate the main and top-level declaration type-specific index pages.
+* `declarationPage.vm` - Used to generate the top-level declaration-specific pages.
+
+The default templates are included for reference in the distribution's `templates` directory, though be aware that they are read from the classpath at runtime, so changes to those files will not have any effect. It is possible to provide one or more custom templates using the `-ct/--custom-templates` argument:
+
+```text
+apexdoc -p sfdx-project.json -o apexdoc -ct apexdoc_templates
+```
+
+The default templates should be used as a starting point when authoring custom templates, and the [Apache Velocity User Guide](https://velocity.apache.org/engine/1.7/user-guide.html) may also prove useful. Note that if a given template is not found in the custom templates directory, the corresponding default template is used. As a result, it is only necessary to add customized templates to the specified directory.
 
 ### Project title
 

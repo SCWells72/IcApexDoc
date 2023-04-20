@@ -8,6 +8,7 @@ dependencies:
 * Apache Commons IO
 * Apache Commons Lang 3
 * Apache Commons Text
+* Apache Velocity
 * ClassGraph
 * Google GSON
 * Oracle Bean Validation API
