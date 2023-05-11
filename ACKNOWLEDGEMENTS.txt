@@ -11,8 +11,9 @@ dependencies:
 * Apache Velocity
 * ClassGraph
 * Google GSON
-* Oracle Bean Validation API
+* highlight.js
 * Jakarta XML Binding API
+* JetBrains Annotations
 * JetBrains intellij-community icons
 * Salesforce Apex Jorje parser
 * SLF4J

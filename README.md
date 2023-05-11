@@ -60,8 +60,99 @@ public interface Shape {
 ApexDoc comments can use the following to provide additional information and formatting:
 
 * **HTML markup** - HTML markup can be used directly within ApexDoc comments. Note that this means that **HTML escaping rules** also apply to ApexDoc comments, e.g., use HTML entities as required. It is recommended that HTML markup in ApexDoc comments be kept **simple** to ensure that they render well in tools such as IDEs which may use simpler HTML rendering engines.
+* [**Markdown**](#markdown-support) - Simple Markdown syntax can be used directly within ApexDoc comments and overview file contents  
 * [**ApexDoc tags**](#apexdoc-tags) - Like JavaDoc, JSDoc, etc., ApexDoc supports a number of tags of the form `@tag [<params>]` that specify information about the documented declaration.
 * [**ApexDoc macros**](#apexdoc-macros) - ApexDoc also supports a number of simple macros to simplify declaration cross-referencing and even code/preformatted blocks.
+
+### Markdown support
+
+IcApexDoc supports a subset of [Markdown syntax](https://www.markdownguide.org/basic-syntax/) for formatting of ApexDoc comments and [overview file contents](#overview-content). The following Markdown features are supported:
+
+* **Bold** - `**text**` or `__text__`
+* *Italic* - `*text*` or `_text_`
+* ~~Strikethrough~~ - `~~text~~`
+* ``Code`` - `` `code` `` or ``` `` `codeWithBackticks` `` ``` (also see **Fenced code blocks** below)
+* **_~~Composition~~_** - The mechanisms above can be used in composition to style text as desired with the following limitations:
+  * `**bold**`/`*italic*` and `__bold__`/`_italic_` cannot be used in immediate composition with one another; use `**bold**`/`_italic_` or `__bold__`/`*italic*` instead.
+  * `` `code` `` must be the **innermost** applied style as it renders its contents exactly.
+* **Heading text** - `#` (`h1`) to `######` (`h6`) followed by heading text, e.g.:
+  ```markdown
+  # Heading 1
+  ## Heading 2
+  ### Heading 3
+  #### Heading 4
+  ##### Heading 5
+  ###### Heading 6
+  ```
+* **Block quotes**
+  ```markdown
+  > line1
+  > line2
+  > ...
+  ```
+* **Fenced code blocks**
+  ````markdown
+  ```language
+  line1
+  line2
+  ...
+  ```
+  ````
+  * The `language` is optional. When provided, language-specific syntax highlighting is implemented using [highlight.js](https://highlightjs.org/), and a value of `apex` automatically acts as a synonym for `java`. I may contribute an Apex-specific grammar to that project so that the language is handled in a first-class manner with syntax highlighting of Apex-specific keywords, etc.
+  * Additional balanced backticks can be used to allow rendering of fenced code blocks within a fenced code block, e.g.:
+    `````markdown
+    ````markdown
+    ```language
+    line1
+    line2
+    ...
+    ```
+    ````
+    `````
+* **Images** - `![alt text](image.ext)`
+* **Hyperlinks** - `[link text](url)`
+  * Hyperlinks can be references to Apex types and their members using the same reference syntax as in the `{@link <reference>}` and `<<reference>>` [macros](#apexdoc-macros).
+* **Horizontal rules** - `---` (three or more dashes) on a separate line
+* **Tables**
+  ```markdown
+  | Header 1 | Header 2 | Header 3 |
+  | -------- | -------- | -------- |
+  | Data 1.1 | Data 1.2 | Data 1.3 |
+  | Data 2.1 | Data 2.2 | Data 2.3 |
+  ```
+  * Table cell delimiters (`|`) can be included in table cells by escaping them (`\|`) or including them in code blocks (`` `A|B` ``).
+  * Multi-line cell data can be provided by using HTML markup that results in multiple lines, e.g., `<br/>` or `<p/>` tags, raw HTML ordered/unordered lists, etc., all on the same line.
+* **Ordered lists**
+  ```markdown
+  1. list item 1
+  2. list item 2
+     with multiple lines
+  3. list item 3
+  ```
+  The numbers used to begin items are unimportant, and `1.` can be used pervasively to avoid having to renumber as items are inserted and removed. List items can span multiple lines, but continuation lines must be indented at least one space more than the line that begins the list item.
+* **Unordered lists**
+  ```markdown
+  * list item 1
+  * list item 2
+    with multiple lines
+  * list item 3
+  ```
+  List items may begin with `*`, `+`, or `-`. List items can span multiple lines, but continuation lines must be indented at least one space more than the line that begins the list item.
+* **Ordered/unordered list nesting** - List items indented relative to the immediate proceeding list item start a nested list of the specified type, e.g.:
+  ```markdown
+  * unordered list item 1
+    - unordered list item 1.1
+      1. ordered list item 1.1.1
+      2. ordered list item 1.1.2
+    - unordered list item 1.2
+  * unordered list item 2
+    1. ordered list item 2.1
+    1. ordered list item 2.2
+       + unordered list item 2.2.1
+       + unordered list item 2.2.2
+  ```
+
+Support for other Markdown features will likely be added in the future. Please feel free to provide feedback on specific Markdown syntax that isn't yet available but would be useful in documenting your Apex types and triggers.
 
 ### ApexDoc tags
 
@@ -87,7 +178,6 @@ The following ApexDoc macros are supported:
 * `{@link <reference>}` - Creates a link to the specified type or member.
 * `<<reference>>` - Creates a link to the specified type or member. **NOTE:** This macro is specifically `<<...>>`; the angle brackets do not frame a variable.
 * `{@code <code>}` - Formats the text as code.
-* <code>\`&lt;code&gt;\`</code> - Formats the text between backticks as code.
 
 References can be specified as:
 * `<typeName>`
@@ -124,7 +214,7 @@ usage: apexdoc <options> | @<optionsFile>
  -nn,--no-namespace              don't use the namespace from sfdx-project.json
  -ct,--custom-templates <arg>    custom Velocity templates directory
  -t,--title <arg>                window title
- -f,--overview <arg>             overview HTML file
+ -f,--overview <arg>             overview HTML or Markdown file
  -c,--css <arg>                  custom stylesheet file
  -h,--help                       show usage details
  -version,--version              show version information
@@ -218,10 +308,10 @@ You can specify the title of the project explicitly using the `-t/--title` argum
 
 ### Overview content
 
-You can specify the path to an HTML file that should be included in the **Overview** landing page to provide a high-level description of the project's contents using the `-f/--overview` argument:
+You can specify the path to an HTML or [Markdown](#markdown-support) file that should be included in the **Overview** landing page to provide a high-level description of the project's contents using the `-f/--overview` argument:
 
 ```text
-apexdoc -p sfdx-project.json -o apexdoc -f myProject.html
+apexdoc -p sfdx-project.json -o apexdoc -f myProject.[html|md]
 ```
 
 The HTML content should **not** include the `<html>`, `<head>`, or  `<body>` tags.

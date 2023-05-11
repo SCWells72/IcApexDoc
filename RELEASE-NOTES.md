@@ -1,9 +1,21 @@
 # Release Notes
 
+* [1.0.0.5](#1005)
 * [1.0.0.4](#1004)
 * [1.0.0.3](#1003)
 * [1.0.0.2](#1002)
 * [1.0.0.1](#1001)
+
+## [1.0.0.5](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.5)
+
+* [Issue 6](https://github.com/SCWells72/IcApexDoc/issues/6) - IcApexDoc now supports Markdown text formatting (in addition to HTML) in both ApexDoc comments and for overview file contents. For more information, see [Markdown support](README.md#markdown-support). A [demonstration video](https://youtu.be/gyvZaho-lD0) is also available.
+  * Note that `@example` text is rendered as an Apex fenced code block when no explicit fenced code blocks are found in the example text.
+  * Also note that **great care** has been taken to try to **preserve** as close to the same generated HTML output as possible given the **same** ApexDoc input. In some cases where Markdown(-ish) syntax was already being used for styling, lists, etc., the generated output may actually be **improved**. However, there are likely some situations where the existing ApexDoc content will need small touch-ups to achieve the desired result.
+* Fixed an issue where the ApexDoc validator would find and flag issues with references to ApexDoc tags used in content text and not as actual tags.
+* Fixed an issue where the top navigation could include dead end links to index pages for missing declaration types.
+* Added generator information to the generated HTML files including the IcApexDoc version and generation date. This is included via the `headInclude.vm` Velocity template and can be changed or removed as desired.
+* Changed the type of escaping applied during HTML generation from XML 1.1 to HTML 4.0 which likely eliminates a large number of unnecessary escaped entities in HTML, e.g., `&apos;` and `&quot;`, but also may result in proper escapes for some other entities.
+* Generally tightened up vertical whitespace in the generated HTML.
 
 ## [1.0.0.4](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.4)
 
@@ -32,4 +44,4 @@
 * Improved HTML generation for section details by using tables so that wrapping occurs properly. Note that this required some **updates to the CSS classes**, so if you've customized the CSS, please **reconcile** with the latest `default.css` as needed. I hope to keep these types of changes to a minimum going forward.
 * Removed support for escaping of parameterized type references in HTML. This was causing no end of issues and is technically incorrect. The correct solutions are to:
   1. Replace angle brackets with the respective HTML entities, e.g., `List<Type>` becomes `List&lt;Type&gt;`.
-  2. Surround the parameterized type reference with one of the macros for rendering code, e.g., <code>\`List&lt;Type&gt;\`</code> or `{@code List<Type>}`.
+  2. Surround the parameterized type reference with one of the macros for rendering code, e.g., <code>&#96;List&lt;Type&gt;&#96;</code> or `{@code List<Type>}`.
