@@ -1,10 +1,21 @@
 # Release Notes
 
+* [1.0.0.6](#1006)
 * [1.0.0.5](#1005)
 * [1.0.0.4](#1004)
 * [1.0.0.3](#1003)
 * [1.0.0.2](#1002)
 * [1.0.0.1](#1001)
+
+## [1.0.0.6](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.6)
+
+* [Issue 1](https://github.com/SCWells72/IcApexDoc/issues/1) - Added an **Index** tab that includes **all** visible declarations (according to the minimum visibility) partitioned by the first character of their namespace-relative (if appropriate) names hyperlinked to their respective declaration documentation. This should hopefully provide a quick and useful way to locate documentation for class constants, utility methods, etc., by name when the exact containing type name is not known.
+* [Issue 2](https://github.com/SCWells72/IcApexDoc/issues/2) - Added a **Groups** tab that organizes top-level declarations by their `@group` tag values. If available, the corresponding group content is displayed, and each group name hyperlinks to a group-specific page where all declarations tagged for that group are listed. For more information about how to document groups, see [Group content files](README.md#group-content-files).
+* Changed the sorting of top-level and member declarations when a namespace is present to use the namespace-relative name so that names within the same namespace aren't grouped together.
+* Added two new options to the [ApexDoc validator](README.md#validator-options-file):
+  * `validateMisattributedGroupTag` - If enabled, `@group` tags used in the documentation comment for non-type/trigger declarations are flagged. Enabled by default.
+  * `validateGroupContentTag` - If enabled, `@group-content` tags are flagged and the user is guided toward the `-gc`/`--group-content` option. Enabled by default.
+* A few cosmetic improvements including selected tab emphasis in the navigation stripe, `code` display of the top-level declaration name in the respective pages, etc.
 
 ## [1.0.0.5](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.5)
 

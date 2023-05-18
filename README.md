@@ -36,6 +36,14 @@ The resulting documentation includes a primary landing page called **Overview** 
 Clicking on a type, trigger, or SObject link navigates to the specific page for that declaration which includes more header-level details for the top-level declaration as well as a list of all visible contained members. Members are listed together in a summary view but are also included in more detail below, broken out by declaration type, i.e., **Constructors**, **Fields**, **Properties**, and **Methods**.
 
 ![TopLevelDeclaration](images/TopLevelDeclaration.png)
+ 
+A **Groups** tab is added (corresponding to the generated file `groups.html`) for all [`@group` ApexDoc tag](#apexdoc-tags) values found in type or trigger declarations with descriptions for each group optionally derived from [group content files](#group-content-files) and links to all members of each respective group.
+
+![Groups](images/Groups.png)
+
+Finally, an **Index** tab is added (corresponding to the generated file `index-all.html`) with all declarations partitioned by the first character of the unqualified declaration name to provide efficient access to the documentation for class constants, utility methods, SObject fields, etc., by simple name.
+
+![Index](images/Index.png)
 
 Documentation for each generated declaration is based on its unique signature, i.e., annotations, modifiers, type, name, parameters, and bidirectional inheritance relationships, as well as the user-defined documentation. For Apex declarations, the user-defined documentation is based on an [ApexDoc documentation comment](#syntax) immediately preceding the declaration itself; for SObjects and their fields, the user-defined documentation is based on the `description` and `label` elements found in the corresponding metadata XML files.
 
@@ -164,8 +172,8 @@ The following ApexDoc tags are supported:
 * `@description <description>` - Specifies a description for the documented declaration. Note that this tag is **optional** (and discouraged) in IcApexDoc. If not present, all text before the first ApexDoc tag will be used as the description for the documented declaration.
 * `@example <example>` - Provides an example usage of the documented declaration. The example is automatically formatted as code.
 * `@exception`/`@throws <exceptionTypeName> [<description>]` - Documents an exception that is thrown by the method or constructor with an optional description of the conditions under which it's thrown. **NOTE:** IcApexDoc accepts both `@exception` and `@throws` for the list of thrown exceptions.
-* `@group <groupName>` - Provides a name that can be used to group common declarations together. **NOTE:** As a **future enhancement**, IcApexDoc may add a **Groups** tab to the page navigation bar where all used groups are displayed and, upon selection, all declarations for that group are listed.
-* `@group-content <filePath>` - Provides the path to a file that should be used when displaying all declarations for the `@group` value. **NOTE:** IcApexDoc currently consumes this as a valid tag but does not include it in the generated output. The same enhancement described above for `@group` would use this to create the group page content.
+* `@group <groupName>` - Provides a name that can be used to group common declarations together. See [Group Content Files](#group-content-files) for more information and the role of the `@group-content` ApexDoc tag in IcApexDoc.
+* `@group-content <filePath>` - The `@group-content` tag is recognized by IcApexDoc _but is not used_. See [Group Content Files](#group-content-files) for more information about how group content is resolved by IcApexDoc.
 * `@param <paramName> [<paramDescription>]` - Describes the respective formal parameter of the documented constructor or method. `@param` tags should be listed in the same order as the respective formal parameters.
 * `@return`/`@returns <description>` - Describes the value(s) returned by the documented method. **NOTE:** The preferred form is `@return` but both are supported by IcApexDoc.
 * `@see <typeName>[.<memberName>] [<description>]` - Adds a reference to a related type or member with an optional description of the relationship.
@@ -212,6 +220,8 @@ usage: apexdoc <options> | @<optionsFile>
                                  (default protected)
  -n,--namespace <arg>            namespace
  -nn,--no-namespace              don't use the namespace from sfdx-project.json
+ -gc,--group-content <arg>       directory containing content files for
+                                 @group/@group-content tags
  -ct,--custom-templates <arg>    custom Velocity templates directory
  -t,--title <arg>                window title
  -f,--overview <arg>             overview HTML or Markdown file
@@ -284,6 +294,24 @@ You can control whether a namespace is used for documented declarations using th
 * If neither argument is provided and an `sfdx-project.json` file containing a `namespace` property is specified, that value is used.
 * If the `sfdx-project.json` file contains a `namespace` property and the namespace should _not_ be used, the `-nn/-no-namespace` argument can be used to disable namespace processing.
 * If no `sfdx-project.json` file is specified, or if a different namespace than the one in that file should be used, the `-n/--namespace` argument can be used to specify a namespace value explicitly.
+
+### Group content files
+
+When one or more `@group` ApexDoc tags are found in Apex types or triggers, a **Groups** tab is added to the generated output for taxonomy-based organization of the project's contents. Additional content can be provided for each tagged group through the use of _group content files_. A group content file is a Markdown- or HTML-formatted file that corresponds to one specific group and describes its role in the system. Group content files are found by IcApexDoc using the `-gc/--group-content` argument, e.g.:
+
+```text
+apexdoc -p sfdx-project.json -o apexdoc -gc apexdoc-group-content
+```
+
+IcApexDoc resolves group names to group content files under the specified group content directory via a **name derivation scheme** where spaces and most other non-alphanumerics characters are replaced with underscores (`_`), and two or more consecutive underscores are reduced to a single underscore, e.g., `@group Authorization Utilities` would resolve to a file named either `Authorization_Utilities.md` or `Authorization_Utilities.html` under the designated group content directory.
+
+If **multiple** group content files are found for a given group name, a **warning** is issued and the first found group content file is used with Markdown taking priority over HTML if both are present. If **no** group content file is found for a given group name, a **warning** is also issued.
+
+A few important notes about IcApexDoc's implementation of group content:
+* First and foremost, the notion of _group content_ is implemented a bit differently in IcApexDoc. Traditionally, at least one `@group` tag would have a corresponding `@group-content` tag with the relative path of an HTML-formatted content file that describes the named group. However, this approach has multiple issues:
+  * It leads to multiple maintenance of the `@group-content` paths and/or the risk that the one-and-only `@group-content` path for a given `@group` value could be removed, thereby inadvertently breaking the association between the group and its content.
+  * The use of relative paths is inherently fragile, particularly in source format projects that allow for a much more flexible directory structure.
+* Existing `@group-content` tags are flagged by the ApexDoc validator with guidance toward the explicit group content directory-based implementation described above. This can be **disabled** if desired by setting the [validator option](#validator-options-file) `validateGroupContentTag` to `false`.
 
 ### Custom Velocity templates
 
@@ -418,6 +446,8 @@ The following properties can be configured in the validator options JSON file:
 | `validateMissingSeeTagDescription`                     | If enabled, `@see` tags which do not provide a description for the referenced target are flagged. Disabled by default.                                                                                                                          |
 | `validateAuthorTagValue`                               | If enabled, `@author` tags which do not specify a value are flagged. Enabled by default.                                                                                                                                                        |
 | `validateGroupTagValue`                                | If enabled, `@group` tags which do not specify a group name are flagged. Enabled by default.                                                                                                                                                    |
+| `validateMisattributedGroupTag`                        | If enabled, `@group` tags used in the documentation comment for non-type/trigger declarations are flagged. Enabled by default.                                                                                                                  |
+| `validateGroupContentTag`                              | If enabled, `@group-content` tags are flagged and the user is guided toward the `-gc`/`--group-content` option. Enabled by default.                                                                                                             |
 | `validateDateTagValue`                                 | If enabled, `@date` tags which do not specify a value are flagged. Enabled by default.                                                                                                                                                          |
 | `validateSinceTagValue`                                | If enabled, `@since` tags which do not specify a value are flagged. Enabled by default.                                                                                                                                                         |
 | `validateExampleTagValue`                              | If enabled, `@example` tags which do not specify a value are flagged. Enabled by default.                                                                                                                                                       |
