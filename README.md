@@ -8,6 +8,7 @@ An API documentation generator for Salesforce Apex types and triggers and custom
 * [Installation](#installation)
 * [Usage](#usage)
 * [Validation](#validation)
+* [Troubleshooting](#troubleshooting)
 * [License](#license)
 * [Release Notes](RELEASE-NOTES.md)
 
@@ -228,6 +229,7 @@ usage: apexdoc <options> | @<optionsFile>
  -c,--css <arg>                  custom stylesheet file
  -h,--help                       show usage details
  -version,--version              show version information
+ -verbose,--verbose              enable verbose error logging
 ```
 
 As indicated, command-line options can be specified explicitly or as the contents of an [options file](#options-file).
@@ -452,10 +454,15 @@ The following properties can be configured in the validator options JSON file:
 | `validateSinceTagValue`                                | If enabled, `@since` tags which do not specify a value are flagged. Enabled by default.                                                                                                                                                         |
 | `validateExampleTagValue`                              | If enabled, `@example` tags which do not specify a value are flagged. Enabled by default.                                                                                                                                                       |
 | `validateDeprecatedTagDescription`                     | If enabled, `@deprecated` tags which do not provide a description are flagged. Disabled by default.                                                                                                                                             |
+| `validateMarkdown`                                     | If enabled, reports issues found in Markdown. Enabled by default.                                                                                                                                                                               |
 
 Note that it is only necessary to include options _for which values are different from their defaults_ in an options file. The default values for all unspecified options will be used automatically.
 
 A [JSON schema](validator/apexdoc_validator.schema.json) is available and can be registered with most IDEs to provide code completion and validation for these options files. A comprehensive [example configuration file](validator/apexdoc_validator_example.json), is also available for reference, but as stated previously, _only customized properties_ need to be included in the options file.
+
+## Troubleshooting
+
+If IcApexDoc fails or reports errors due to caught exceptions, the `-verbose`/`--verbose` command-line argument can be used to enable logging of the full caught exception stack trace. Generally this would be included in a bug report in the public issue tracker along with steps to reproduce the issue.
 
 ## License
 

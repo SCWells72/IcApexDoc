@@ -37,11 +37,15 @@
   "validateAuthorTagValue": true,
 
   "validateGroupTagValue": true,
+  "validateMisattributedGroupTag": true,
+  "validateGroupContentTag": true,
 
   "validateDateTagValue": true,
   "validateSinceTagValue": true,
 
   "validateExampleTagValue": true,
 
-  "validateDeprecatedTagDescription": false
+  "validateDeprecatedTagDescription": false,
+
+  "validateMarkdown": true
 }

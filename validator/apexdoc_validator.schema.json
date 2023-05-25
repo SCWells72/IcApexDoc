@@ -166,6 +166,16 @@
       "default": true,
       "description": "If enabled, @group tags which do not specify a group name are flagged. Enabled by default."
     },
+    "validateMisattributedGroupTag": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @group tags used in the documentation comment for non-type/trigger declarations are flagged. Enabled by default."
+    },
+    "validateGroupContentTag": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @group-content tags are flagged and the user is guided toward the -gc/--group-content option. Enabled by default."
+    },
     "validateDateTagValue": {
       "type": "boolean",
       "default": true,
@@ -185,6 +195,11 @@
       "type": "boolean",
       "default": false,
       "description": "If enabled, @deprecated tags which do not provide a description are flagged. Disabled by default."
+    },
+    "validateMarkdown": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, reports issues found in Markdown. Enabled by default."
     }
   }
 }

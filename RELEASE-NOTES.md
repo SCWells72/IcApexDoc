@@ -1,11 +1,19 @@
 # Release Notes
 
+* [1.0.0.7](#1007)
 * [1.0.0.6](#1006)
 * [1.0.0.5](#1005)
 * [1.0.0.4](#1004)
 * [1.0.0.3](#1003)
 * [1.0.0.2](#1002)
 * [1.0.0.1](#1001)
+
+## [1.0.0.7](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.7)
+
+* [Issue 11](https://github.com/SCWells72/IcApexDoc/issues/11) - Fixed an issue that would result in failed ApexDoc generation if Markdown included `$<something>` that would be interpreted incorrectly as a regular expression group reference.
+* Issues reported by Markdown-to-HTML conversion are included in ApexDoc validation output. This can be disabled if desired using the new `validateMarkdown` [ApexDoc validator](README.md#validator-options-file) option.
+* Fixed an issue with the `groupPage.vm` Velocity template that would result in an unbalanced `<div>` tag when group content is not present.
+* Added a `-verbose`/`--verbose` command-line option to print the full stack trace when exceptions are caught and logged. That behavior is disabled by default but can be enabled when [troubleshooting](README.md#troubleshooting) and reporting issues.
 
 ## [1.0.0.6](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.6)
 
