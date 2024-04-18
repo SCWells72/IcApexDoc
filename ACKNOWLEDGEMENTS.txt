@@ -12,6 +12,7 @@ dependencies:
 * ClassGraph
 * Google GSON
 * highlight.js
+* highlightjs-apex
 * Jakarta XML Binding API
 * JetBrains Annotations
 * JetBrains intellij-community icons

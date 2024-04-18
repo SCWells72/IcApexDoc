@@ -1,5 +1,6 @@
 # Release Notes
 
+* [1.0.0.9](#1009)
 * [1.0.0.8](#1008)
 * [1.0.0.7](#1007)
 * [1.0.0.6](#1006)
@@ -8,6 +9,17 @@
 * [1.0.0.3](#1003)
 * [1.0.0.2](#1002)
 * [1.0.0.1](#1001)
+
+## [1.0.0.9](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.9)
+
+* [Issue 13](https://github.com/SCWells72/IcApexDoc/issues/13) - Enhanced the generated documentation for custom SObject fields to include field metadata information. Note that at present, the format of this documentation is static, though I may extract it into another Velocity template to allow it to be customized. 
+* [Issue 14](https://github.com/SCWells72/IcApexDoc/issues/14) - Fixed an issue with link resolution for an unqualified type name in a project with a namespace.
+* Updated [highlight.js](https://highlightjs.org/) to the latest version and incorporated support for [David Schach](https://github.com/dschach)'s [highlightjs-apex](https://github.com/highlightjs/highlightjs-apex) Apex grammar extension. These updates can be found in the `headInclude.vm` Velocity template. While optional, it is recommended that custom versions of that template be updated with the respective changes.
+* Org-only custom Apex type bodies are now queried using the Salesforce CLI command `sf data query` instead of the older `sfdx force:data:soql:query` command. If you encounter issues with this feature, please make sure that your Salesforce CLI install is up-to-date and valid, potentially [uninstalling](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_uninstall.htm) and [reinstalling](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm) it if necessary.
+* Fixed an issue with Markdown links to standard Apex types with explicit link text, e.g., `[some text](StandardTypeName)`.
+* Fixed an issue with types that implement or extend the standard Apex `System.Comparator` interface where it would not be properly included in the type inheritance signature.
+* Updated the Apex jorje parser to the latest version.
+* Updated standard API documentation URLs for Spring '24 and the `Slack` namespace.
 
 ## [1.0.0.8](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.7)
 
