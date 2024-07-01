@@ -1,5 +1,6 @@
 # Release Notes
 
+* [1.0.1.0](#1010)
 * [1.0.0.9](#1009)
 * [1.0.0.8](#1008)
 * [1.0.0.7](#1007)
@@ -9,6 +10,10 @@
 * [1.0.0.3](#1003)
 * [1.0.0.2](#1002)
 * [1.0.0.1](#1001)
+
+## [1.0.1.0](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.1.0)
+
+* No functional changes. Updated standard API documentation URLs for Summer '24.
 
 ## [1.0.0.9](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.0.9)
 
