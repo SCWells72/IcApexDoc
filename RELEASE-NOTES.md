@@ -1,5 +1,6 @@
 # Release Notes
 
+* [1.0.1.1](#1011)
 * [1.0.1.0](#1010)
 * [1.0.0.9](#1009)
 * [1.0.0.8](#1008)
@@ -10,6 +11,12 @@
 * [1.0.0.3](#1003)
 * [1.0.0.2](#1002)
 * [1.0.0.1](#1001)
+
+## [1.0.1.1](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.1.1)
+
+* Fixed a potential NPE when an `@group` tag found in a comment is not attributable to a declaration.
+* Fixed a bug with a markdown list item being at the very end of the markdown text.
+* Updated standard API documentation URLs for Winter '25.
 
 ## [1.0.1.0](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.1.0)
 
