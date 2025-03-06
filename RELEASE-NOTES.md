@@ -1,5 +1,6 @@
 # Release Notes
 
+* [1.0.1.2](#1012)
 * [1.0.1.1](#1011)
 * [1.0.1.0](#1010)
 * [1.0.0.9](#1009)
@@ -11,6 +12,10 @@
 * [1.0.0.3](#1003)
 * [1.0.0.2](#1002)
 * [1.0.0.1](#1001)
+
+## [1.0.1.2](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.1.2)
+
+* Updated standard API documentation URLs for Spring '25.
 
 ## [1.0.1.1](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.1.1)
 
