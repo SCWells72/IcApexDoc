@@ -24,6 +24,8 @@ There are several other implementations of ApexDoc including:
 * [**SfApexDoc**](https://lucidwaresolutions.com/sfapexdoc/) - A derivative of ApexDoc with support for additional tags and features; doesn't seem to be maintained any longer
 * [**ApexDocs**](https://www.npmjs.com/package/@cparra/apexdocs) - A Node.js library and tool that further extends the available tags and markup features
 
+Additionally, Salesforce has recently (as of late 2025) published a [specification](https://developer.salesforce.com/docs/atlas.en-us.258.0.apexcode.meta/apexcode/apex_doc_format.htm) for ApexDoc that will become the standard. IcApexDoc provides full support for that specification via a [strict mode](#strict-mode) option for its [validation features](#validation).
+
 IcApexDoc is based on [**Illuminated Cloud 2**](https://www.illuminatedcloud.com/)'s ApexDoc parser and HTML generator used to support its [ApexDoc authoring features](https://www.youtube.com/watch?v=j67equfpdRo). However, while Illuminated Cloud 2 is a **commercial product**, IcApexDoc is [**completely free to use**](#license) and is planned for an eventual (hopefully soon) **open source release**.
 
 ## Features
@@ -69,13 +71,13 @@ public interface Shape {
 ApexDoc comments can use the following to provide additional information and formatting:
 
 * **HTML markup** - HTML markup can be used directly within ApexDoc comments. Note that this means that **HTML escaping rules** also apply to ApexDoc comments, e.g., use HTML entities as required. It is recommended that HTML markup in ApexDoc comments be kept **simple** to ensure that they render well in tools such as IDEs which may use simpler HTML rendering engines.
-* [**Markdown**](#markdown-support) - Simple Markdown syntax can be used directly within ApexDoc comments and overview file contents  
+* [**Markdown**](#markdown-support) - Unless [strict mode](#strict-mode) is enabled, simple Markdown syntax can be used directly within ApexDoc comments and overview file contents. Hopefully in the near future Salesforce's ApexDoc specification will be amended to support Markdown-based formatting as that has become the de facto standard for technical documentation.
 * [**ApexDoc tags**](#apexdoc-tags) - Like JavaDoc, JSDoc, etc., ApexDoc supports a number of tags of the form `@tag [<params>]` that specify information about the documented declaration.
 * [**ApexDoc macros**](#apexdoc-macros) - ApexDoc also supports a number of simple macros to simplify declaration cross-referencing and even code/preformatted blocks.
 
 ### Markdown support
 
-IcApexDoc supports a subset of [Markdown syntax](https://www.markdownguide.org/basic-syntax/) for formatting of ApexDoc comments and [overview file contents](#overview-content). The following Markdown features are supported:
+Unless [strict mode](#strict-mode) is enabled, IcApexDoc supports a subset of [Markdown syntax](https://www.markdownguide.org/basic-syntax/) for formatting of ApexDoc comments and [overview file contents](#overview-content). The following Markdown features are supported:
 
 * **Bold** - `**text**` or `__text__`
 * *Italic* - `*text*` or `_text_`
@@ -172,29 +174,42 @@ The following ApexDoc tags are supported:
 * `@deprecated [<description>]` - Denotes the declaration as deprecated with optional information about the deprecation such as a suggested alternative; note that this is different from the [`@Deprecated` Apex annotation](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_deprecated.htm) which can only be applied to `global` symbols in released managed packages while the ApexDoc tag can be applied to any declaration to communicate that it should no longer be used.
 * `@description <description>` - Specifies a description for the documented declaration. Note that this tag is **optional** (and discouraged) in IcApexDoc. If not present, all text before the first ApexDoc tag will be used as the description for the documented declaration.
 * `@example <example>` - Provides an example usage of the documented declaration. The example is automatically formatted as code.
-* `@exception`/`@throws <exceptionTypeName> [<description>]` - Documents an exception that is thrown by the method or constructor with an optional description of the conditions under which it's thrown. **NOTE:** IcApexDoc accepts both `@exception` and `@throws` for the list of thrown exceptions.
 * `@group <groupName>` - Provides a name that can be used to group common declarations together. See [Group Content Files](#group-content-files) for more information and the role of the `@group-content` ApexDoc tag in IcApexDoc.
 * `@group-content <filePath>` - The `@group-content` tag is recognized by IcApexDoc _but is not used_. See [Group Content Files](#group-content-files) for more information about how group content is resolved by IcApexDoc.
 * `@param <paramName> [<paramDescription>]` - Describes the respective formal parameter of the documented constructor or method. `@param` tags should be listed in the same order as the respective formal parameters.
 * `@return`/`@returns <description>` - Describes the value(s) returned by the documented method. **NOTE:** The preferred form is `@return` but both are supported by IcApexDoc.
 * `@see <typeName>[.<memberName>] [<description>]` - Adds a reference to a related type or member with an optional description of the relationship.
 * `@since <value>` - Specifies a version, date, etc., from which the documented declaration should be considered available.
+* `@throws`/`@exception <exceptionTypeName> [<description>]` - Documents an exception that is thrown by the method or constructor with an optional description of the conditions under which it's thrown. **NOTE:** IcApexDoc accepts both `@throws` and `@exception` for the list of thrown exceptions.
+* `@version <version>` - Specifies the version of the documented declaration.
+
+The following ApexDoc tags are **not supported** in [strict mode](#strict-mode):
+
+* `@date`
+* `@description`
+* `@exception`
+* `@group-content`
+* `@returns`
 
 ### ApexDoc macros
 
 The following ApexDoc macros are supported:
 
-* `{@link <reference>}` - Creates a link to the specified type or member.
-* `<<reference>>` - Creates a link to the specified type or member. **NOTE:** This macro is specifically `<<...>>`; the angle brackets do not frame a variable.
 * `{@code <code>}` - Formats the text as code.
+* `{@hidden <text>}` - Prevents the specified text from being conveyed into the generated documentation.
+* `{@link <link>}` - Creates a link to the specified type/member, quoted text, or HTML anchor tag.
+* `<<link>>` - Creates a link to the specified type/member, quoted text, or HTML anchor tag. **NOTE:** This macro is specifically `<<...>>`; the angle brackets do not frame a variable. This macro is **not supported** in [strict mode](#strict-mode).
+* `{@literal <text>}` - Conveys the specified text into the generated documentation exactly, escaping HTML content as needed.
 
-References can be specified as:
+Links can be specified as:
 * `<typeName>`
 * `<typeName>.<memberName>`
 * `<typeName>#<memberName>`
 * `#<memberName>`
+* `"double-quoted text"`/`'single-quoted text'` - Conveys the specified text into the generated documentation with quotes removed
+* `<a href="link">text</a>`
 
-**NOTE:** Currently references to specific method signatures are not supported. The hyperlink will navigate to the first method signature with the specified name.
+**NOTE:** Currently link references to specific method signatures are not supported. The hyperlink will navigate to the first method signature with the specified name.
 
 ## Installation
 
@@ -394,6 +409,20 @@ where an example `apexdoc_validator.json` might contain:
 }
 ```
 
+### Strict mode
+
+The validator includes a meta-option for enabling rules that ensure compliance with Salesforce's [published ApexDoc specification](https://developer.salesforce.com/docs/atlas.en-us.258.0.apexcode.meta/apexcode/apex_doc_format.htm). This option, called `strictMode`, is _disabled by default_.
+
+When strict mode is enabled, the following IcApexDoc features are automatically disabled, and usages are flagged as **errors** by the validator:
+
+* `@date` tag
+* `@description` tag
+* `@exception` tag
+* `@group-content` tag
+* `@returns` tag
+* `<<link>>` macro
+* Markdown-based formatting - Markdown usages are flagged as errors, but no Markdown-based formatting is applied to the generated documentation.
+
 ### Validation results
 
 Validation results are included in the output of the `apexdoc` CLI alongside the respective file. Each reported issue includes the severity (currently `Warning` for all validation rules), file path, line number, and detailed error message, e.g.:
@@ -416,45 +445,48 @@ Generating HTML files...
 
 The following properties can be configured in the validator options JSON file:
 
-| Property                                               | Description                                                                                                                                                                                                                                     |
-|--------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `validateMissingDocComment`                            | If enabled, report declarations that meet or exceed the minimum visibility for ApexDoc generation that do not have a documentation comment. Disabled by default.                                                                                |
-| `validateMissingDocCommentMinimumVisibility`           | The minimum visibility for which `validateMissingDocComment` should apply as one of `PRIVATE`, `PROTECTED`, `PUBLIC`, or `GLOBAL`. The default is `PROTECTED`.                                                                                  |
-| `validateMissingDocCommentIgnoreDeprecated`            | If enabled and `validateMissingDocComment` is also enabled, `@Deprecated` declarations that would otherwise be flagged by `validateMissingDocComment` are ignored. Enabled by default.                                                          |
-| `validateMissingDocCommentIgnoreInherited`             | If enabled and `validateMissingDocComment` is also enabled, declarations that would otherwise be flagged by `validateMissingDocComment` but which inherit a documentation comment from a base declaration are ignored. Enabled by default.      |
-| `validateMissingDocCommentIgnoreExtendsSystemType`     | If enabled and `validateMissingDocComment` is also enabled, declarations that would otherwise be flagged by `validateMissingDocComment` but which extend a standard/system Apex type are ignored. Disabled by default.                          |
-| `validateMissingDocCommentIgnoreOverridesSystemMethod` | If enabled and `validateMissingDocComment` is also enabled, declarations that would otherwise be flagged by `validateMissingDocComment` but which implement/override a method from a standard/system Apex type are ignored. Enabled by default. |
-| `validateUnresolvableAtLink`                           | If enabled, unresolvable declaration references in `{@link ...}` macros are flagged. Enabled by default.                                                                                                                                        |
-| `validateUnresolvableTypeReference`                    | If enabled, unresolvable declaration references in `<<...>>` macros are flagged. Enabled by default.                                                                                                                                            |
-| `validateMissingDescriptionTag`                        | If enabled, description text that is not explicitly designated with the `@description` tag are flagged. Disabled by default.                                                                                                                    |
-| `validateMissingParamTag`                              | If enabled, formal parameters which do not have a corresponding `@param` tag in the parent method or constructor's documentation comment are flagged. Enabled by default.                                                                       |
-| `validateMissingParamTagName`                          | If enabled, `@param` tags which do not specify a formal parameter name are flagged. Enabled by default.                                                                                                                                         |
-| `validateMissingParamTagDescription`                   | If enabled, `@param` tags which do not provide a description are flagged. Enabled by default.                                                                                                                                                   |
-| `validateIncorrectlyOrderedParamTag`                   | If enabled, `@param` tags which are not listed in the exact same order as their respective formal parameters are flagged. Enabled by default.                                                                                                   |
-| `validateUnresolvableParamTag`                         | If enabled, `@param` tags which specify a formal parameter name that does not correspond to an actual formal parameter of the documented method or constructor are flagged. Enabled by default.                                                 |
-| `validateMisattributedParamTag`                        | If enabled, `@param` tags used in the documentation comment for any declaration type that does not accept formal parameters are flagged. Enabled by default.                                                                                    |
-| `validateMissingReturnTag`                             | If enabled, documentation comments for methods that specify a non-void return type but do not include an `@return/s` tag are flagged. Enabled by default.                                                                                       |
-| `validateExtraneousReturnTag`                          | If enabled, documentation comments for methods that specify a void return type but include an `@return/s` tag are flagged. Enabled by default.                                                                                                  |
-| `validateMissingReturnTagDescription`                  | If enabled, `@return/s` tags which do not provide a description are flagged. Enabled by default.                                                                                                                                                |
-| `validateMisattributedReturnTag`                       | If enabled, `@return/s` tags used in the documentation comment for any declaration type that does have an explicit return type (including constructors) are flagged. Enabled by default.                                                        |
-| `validateReturnsTagUsage`                              | If enabled, usages of the non-standard `@returns` tag are flagged. It is recommended that the standard `@return` tag be used instead. Enabled by default.                                                                                       |
-| `validateMissingExceptionTagTypeName`                  | If enabled, `@throws/@exception` tags which do not specify an exception type name are flagged. Enabled by default.                                                                                                                              |
-| `validateUnresolvableExceptionTagTypeName`             | If enabled, `@throws/@exception` tags which specify an exception type name that cannot be resolved are flagged. Enabled by default.                                                                                                             |
-| `validateMissingExceptionTagDescription`               | If enabled, `@throws/@exception` tags which do not provide a description for the thrown exception are flagged. Enabled by default.                                                                                                              |
-| `validateMisattributedExceptionTag`                    | If enabled, `@throws/@exception` tags used in the documentation comment for any declaration type that cannot throw an exception are flagged. Enabled by default.                                                                                |
-| `preferredExceptionTag`                                | The preferred tag for documenting thrown exceptions, either `THROWS` or `EXCEPTION`. The non-preferred tag is flagged when found. The default is `THROWS`.                                                                                      |
-| `validateMissingSeeTagTypeMemberName`                  | If enabled, `@see` tags which do not specify a target are flagged. Enabled by default.                                                                                                                                                          |
-| `validateUnresolvableSeeTagTypeMemberName`             | If enabled, `@see` tags which specify an unresolvable target are flagged. Enabled by default.                                                                                                                                                   |
-| `validateMissingSeeTagDescription`                     | If enabled, `@see` tags which do not provide a description for the referenced target are flagged. Disabled by default.                                                                                                                          |
-| `validateAuthorTagValue`                               | If enabled, `@author` tags which do not specify a value are flagged. Enabled by default.                                                                                                                                                        |
-| `validateGroupTagValue`                                | If enabled, `@group` tags which do not specify a group name are flagged. Enabled by default.                                                                                                                                                    |
-| `validateMisattributedGroupTag`                        | If enabled, `@group` tags used in the documentation comment for non-type/trigger declarations are flagged. Enabled by default.                                                                                                                  |
-| `validateGroupContentTag`                              | If enabled, `@group-content` tags are flagged and the user is guided toward the `-gc`/`--group-content` option. Enabled by default.                                                                                                             |
-| `validateDateTagValue`                                 | If enabled, `@date` tags which do not specify a value are flagged. Enabled by default.                                                                                                                                                          |
-| `validateSinceTagValue`                                | If enabled, `@since` tags which do not specify a value are flagged. Enabled by default.                                                                                                                                                         |
-| `validateExampleTagValue`                              | If enabled, `@example` tags which do not specify a value are flagged. Enabled by default.                                                                                                                                                       |
-| `validateDeprecatedTagDescription`                     | If enabled, `@deprecated` tags which do not provide a description are flagged. Disabled by default.                                                                                                                                             |
-| `validateMarkdown`                                     | If enabled, reports issues found in Markdown. Enabled by default.                                                                                                                                                                               |
+| Property                                               | Description                                                                                                                                                                                                                 | Default     |
+|--------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
+| `failOnError`                                          | If enabled and errors are reported during ApexDoc validation, the process will terminate with a non-zero exit code.                                                                                                         | Disabled    |
+| `strictMode`                                           | If enabled, report usages of features that are not supported by Salesforce's ApexDoc specification and disable Markdown formatting.                                                                                         | Disabled    |
+| `validateMissingDocComment`                            | If enabled, report declarations that meet or exceed the minimum visibility for ApexDoc generation that do not have a documentation comment.                                                                                 | Disabled    |
+| `validateMissingDocCommentMinimumVisibility`           | The minimum visibility for which `validateMissingDocComment` should apply as one of `PRIVATE`, `PROTECTED`, `PUBLIC`, or `GLOBAL`.                                                                                          | `PROTECTED` |
+| `validateMissingDocCommentIgnoreDeprecated`            | If enabled and `validateMissingDocComment` is also enabled, `@Deprecated` declarations that would otherwise be flagged by `validateMissingDocComment` are ignored.                                                          | Enabled     |
+| `validateMissingDocCommentIgnoreInherited`             | If enabled and `validateMissingDocComment` is also enabled, declarations that would otherwise be flagged by `validateMissingDocComment` but which inherit a documentation comment from a base declaration are ignored.      | Enabled     |
+| `validateMissingDocCommentIgnoreExtendsSystemType`     | If enabled and `validateMissingDocComment` is also enabled, declarations that would otherwise be flagged by `validateMissingDocComment` but which extend a standard/system Apex type are ignored.                           | Disabled    |
+| `validateMissingDocCommentIgnoreOverridesSystemMethod` | If enabled and `validateMissingDocComment` is also enabled, declarations that would otherwise be flagged by `validateMissingDocComment` but which implement/override a method from a standard/system Apex type are ignored. | Enabled     |
+| `validateUnresolvableAtLink`                           | If enabled, unresolvable declaration references in `{@link ...}` macros are flagged.                                                                                                                                        | Enabled     |
+| `validateUnresolvableTypeReference`                    | If enabled, unresolvable declaration references in `<<...>>` macros are flagged.                                                                                                                                            | Enabled     |
+| `validateMissingDescriptionTag`                        | If enabled, description text that is not explicitly designated with the `@description` tag are flagged.                                                                                                                     | Disabled    |
+| `validateMissingParamTag`                              | If enabled, formal parameters which do not have a corresponding `@param` tag in the parent method or constructor's documentation comment are flagged.                                                                       | Enabled     |
+| `validateMissingParamTagName`                          | If enabled, `@param` tags which do not specify a formal parameter name are flagged.                                                                                                                                         | Enabled     |
+| `validateMissingParamTagDescription`                   | If enabled, `@param` tags which do not provide a description are flagged.                                                                                                                                                   | Enabled     |
+| `validateIncorrectlyOrderedParamTag`                   | If enabled, `@param` tags which are not listed in the exact same order as their respective formal parameters are flagged.                                                                                                   | Enabled     |
+| `validateUnresolvableParamTag`                         | If enabled, `@param` tags which specify a formal parameter name that does not correspond to an actual formal parameter of the documented method or constructor are flagged.                                                 | Enabled     |
+| `validateMisattributedParamTag`                        | If enabled, `@param` tags used in the documentation comment for any declaration type that does not accept formal parameters are flagged.                                                                                    | Enabled     |
+| `validateMissingReturnTag`                             | If enabled, documentation comments for methods that specify a non-void return type but do not include an `@return/s` tag are flagged.                                                                                       | Enabled     |
+| `validateExtraneousReturnTag`                          | If enabled, documentation comments for methods that specify a void return type but include an `@return/s` tag are flagged.                                                                                                  | Enabled     |
+| `validateMissingReturnTagDescription`                  | If enabled, `@return/s` tags which do not provide a description are flagged.                                                                                                                                                | Enabled     |
+| `validateMisattributedReturnTag`                       | If enabled, `@return/s` tags used in the documentation comment for any declaration type that does have an explicit return type (including constructors) are flagged.                                                        | Enabled     |
+| `validateReturnsTagUsage`                              | If enabled, usages of the non-standard `@returns` tag are flagged. It is recommended that the standard `@return` tag be used instead.                                                                                       | Enabled     |
+| `validateMissingExceptionTagTypeName`                  | If enabled, `@throws/@exception` tags which do not specify an exception type name are flagged.                                                                                                                              | Enabled     |
+| `validateUnresolvableExceptionTagTypeName`             | If enabled, `@throws/@exception` tags which specify an exception type name that cannot be resolved are flagged.                                                                                                             | Enabled     |
+| `validateMissingExceptionTagDescription`               | If enabled, `@throws/@exception` tags which do not provide a description for the thrown exception are flagged.                                                                                                              | Enabled     |
+| `validateMisattributedExceptionTag`                    | If enabled, `@throws/@exception` tags used in the documentation comment for any declaration type that cannot throw an exception are flagged.                                                                                | Enabled     |
+| `preferredExceptionTag`                                | The preferred tag for documenting thrown exceptions, either `THROWS` or `EXCEPTION`. The non-preferred tag is flagged when found.                                                                                           | `THROWS`    |
+| `validateMissingSeeTagTypeMemberName`                  | If enabled, `@see` tags which do not specify a target are flagged.                                                                                                                                                          | Enabled     |
+| `validateUnresolvableSeeTagTypeMemberName`             | If enabled, `@see` tags which specify an unresolvable target are flagged.                                                                                                                                                   | Enabled     |
+| `validateMissingSeeTagDescription`                     | If enabled, `@see` tags which do not provide a description for the referenced target are flagged.                                                                                                                           | Disabled    |
+| `validateAuthorTagValue`                               | If enabled, `@author` tags which do not specify a value are flagged.                                                                                                                                                        | Enabled     |
+| `validateGroupTagValue`                                | If enabled, `@group` tags which do not specify a group name are flagged.                                                                                                                                                    | Enabled     |
+| `validateGroupContentTag`                              | If enabled, `@group-content` tags are flagged and the user is guided toward the `-gc`/`--group-content` option.                                                                                                             | Enabled     |
+| `validateDateTagValue`                                 | If enabled, `@date` tags which do not specify a value are flagged.                                                                                                                                                          | Enabled     |
+| `validateSinceTagValue`                                | If enabled, `@since` tags which do not specify a value are flagged.                                                                                                                                                         | Enabled     |
+| `validateVersionTagValue`                              | If enabled, `@version` tags which do not specify a value are flagged.                                                                                                                                                       | Enabled     |
+| `validateMisattributedVersionTag`                      | If enabled, `@version` tags used in the documentation comment for non-type/trigger declarations are flagged.                                                                                                                | Enabled     |
+| `validateExampleTagValue`                              | If enabled, `@example` tags which do not specify a value are flagged.                                                                                                                                                       | Enabled     |
+| `validateDeprecatedTagDescription`                     | If enabled, `@deprecated` tags which do not provide a description are flagged.                                                                                                                                              | Disabled    |
+| `validateMarkdown`                                     | If enabled, reports issues found in Markdown.                                                                                                                                                                               | Enabled     |
 
 Note that it is only necessary to include options _for which values are different from their defaults_ in an options file. The default values for all unspecified options will be used automatically.
 

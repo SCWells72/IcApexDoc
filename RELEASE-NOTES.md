@@ -1,5 +1,6 @@
 # Release Notes
 
+* [1.0.1.3](#1013)
 * [1.0.1.2](#1012)
 * [1.0.1.1](#1011)
 * [1.0.1.0](#1010)
@@ -12,6 +13,11 @@
 * [1.0.0.3](#1003)
 * [1.0.0.2](#1002)
 * [1.0.0.1](#1001)
+
+## [1.0.1.3](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.1.3)
+
+* Added a new `strictMode` validator option &ndash; enabled via [validator options](README.md#validator-options-file) &ndash; that ensures compliance with Salesforce's [published ApexDoc specification](https://developer.salesforce.com/docs/atlas.en-us.258.0.apexcode.meta/apexcode/apex_doc_format.htm). See the [respective documentation](README.md#strict-mode) for details.
+* Added a new `failOnError` validator option &ndash; enabled via [validator options](README.md#validator-options-file) &ndash; that causes `apexdoc` to fail with a non-zero exit code when validation issues are reported at the error level, specifically those reported by strict mode.
 
 ## [1.0.1.2](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.1.2)
 

@@ -6,6 +6,16 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "failOnError": {
+      "type": "boolean",
+      "default": false,
+      "description": "If enabled and errors are reported during ApexDoc validation, the process will terminate with a non-zero exit code."
+    },
+    "strictMode": {
+      "type": "boolean",
+      "default": false,
+      "description": "If enabled, ApexDoc is validated strictly according to Salesforce's spec. Disabled by default."
+    },
     "validateMissingDocComment": {
       "type": "boolean",
       "default": false,
@@ -166,11 +176,6 @@
       "default": true,
       "description": "If enabled, @group tags which do not specify a group name are flagged. Enabled by default."
     },
-    "validateMisattributedGroupTag": {
-      "type": "boolean",
-      "default": true,
-      "description": "If enabled, @group tags used in the documentation comment for non-type/trigger declarations are flagged. Enabled by default."
-    },
     "validateGroupContentTag": {
       "type": "boolean",
       "default": true,
@@ -185,6 +190,16 @@
       "type": "boolean",
       "default": true,
       "description": "If enabled, @since tags which do not specify a value are flagged. Enabled by default."
+    },
+    "validateVersionTagValue": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @version tags which do not specify a value are flagged. Enabled by default."
+    },
+    "validateMisattributedVersionTag": {
+      "type": "boolean",
+      "default": true,
+      "description": "If enabled, @version tags used in the documentation comment for non-type/trigger declarations are flagged. Enabled by default."
     },
     "validateExampleTagValue": {
       "type": "boolean",
