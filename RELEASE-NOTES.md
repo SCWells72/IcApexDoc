@@ -1,5 +1,6 @@
 # Release Notes
 
+* [1.0.1.6](#1015)
 * [1.0.1.5](#1015)
 * [1.0.1.4](#1014)
 * [1.0.1.3](#1013)
@@ -15,6 +16,11 @@
 * [1.0.0.3](#1003)
 * [1.0.0.2](#1002)
 * [1.0.0.1](#1001)
+
+## [1.0.1.6](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.1.6)
+
+* Updated standard API documentation URLs for Summer '26.
+* Updated the Apex jorje parser to the latest version. Note that this bundled library update requires Java 17+, so IcApexDoc now requires Java 17+ as well.
 
 ## [1.0.1.5](https://github.com/SCWells72/IcApexDoc/releases/tag/1.0.1.5)
 

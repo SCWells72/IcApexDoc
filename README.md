@@ -215,7 +215,7 @@ Links can be specified as:
 
 You can install IcApexDoc by downloading the latest released `IcApexDoc.zip` archive from the **Releases** sidebar, extracting it into your local filesystem, and adding `<extractedDirectory>/bin` to your operating system's execution path. You should then be able to run `apexdoc` from the command-line successfully.
 
-Note that you **must** also have a **Java 11+ runtime environment** installed with the `java` executable also available in the operating system's execution path such that you are able to run `java` from the command-line successfully.
+Note that you **must** also have a **Java 17+ runtime environment** installed with the `java` executable also available in the operating system's execution path such that you are able to run `java` from the command-line successfully.
 
 ## Usage
 
